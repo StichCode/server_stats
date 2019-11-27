@@ -37,3 +37,4 @@ def memory_usage():
         "%": disk.percent
     }
     return memory_disk
+
