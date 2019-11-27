@@ -1,5 +1,4 @@
 import os
-from pprint import pprint
 
 import telebot
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
@@ -63,9 +62,9 @@ for line in prepare_data()[:5]:
     cmd_line = ""
     text_ram += "\n"
     text_ram += f"Pid        : {line['pid']}\n"
-    text_ram += f"Ram        : {line['ram']}%\n",
+    text_ram += f"Ram        : {round(line['ram'], 2)}%\n"
     text_ram += f"Name       : {line['name']}\n"
-    text_ram += f"Cmd line   : {line['cmd line']}\n"
+    text_ram += f"Cmd line   : {line['cmd line'][:2]}\n"
     text_ram += f"Time works : {line['time works']}\n"
     text_ram += "___________________________"
 
