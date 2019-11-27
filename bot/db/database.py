@@ -52,6 +52,8 @@ def has_user_permission(id_users):
     cursor.execute("SELECT sign_in FROM users where id = {}".format(id_users))
     has_permission = cursor.fetchone()
     conn.close()
+    print(has_permission)
+    print(type(has_permission))
     if has_permission is None or has_permission[0] == 0:
         return False
     return True
