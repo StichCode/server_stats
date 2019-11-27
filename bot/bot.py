@@ -3,7 +3,7 @@ import os
 import telebot
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 
-from bot.db.database import create_db, has_user_permission, create_new_user
+from bot.db.database import create_db, has_user_permission, create_new_user, get_users_to_permissions
 from bot.get_info import memory_usage, prepare_data
 
 TOKEN = os.environ.get("TOKEN")
@@ -38,11 +38,15 @@ def send_info(message):
                                               f"Percent : {round(memory['%'], 3)} %\n")
         elif message.text == "/cpu":
             bot.send_message(message.chat.id, "IT's not worked")
+        elif message.text == "/want_permissions":
+            bot.send_message(message.chat.id, get_users_to_permissions())
+
         else:
             bot.send_message(message.chat.id, "I can show you only:\n"
                                               f"RAM    {emoji}\n"
                                               f"MEMORY {emoji}\n"
                                               f"CPU    {emoji}")
+
     else:
         bot.send_message(message.chat.id, "You don't have permission to use bot\n")
         create_new_user(message.from_user.id, message.from_user.username)

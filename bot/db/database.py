@@ -73,7 +73,13 @@ def edit_user_settings(id_user, id_to_change):
 def get_users_to_permissions():
     conn = __connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM users where sign_in = 0")
+    cursor.execute("SELECT * FROM users where sign_in = 1")
     users = cursor.fetchall()
     conn.close()
-    return users
+    text = "___This users want permissions___\n"
+    count = 1
+    for i in range(len(users)):
+        text += f"{count} - Name: {users[i][1]} Id: {users[i][0]}\n"
+        text += "__________________________________\n"
+        count += 1
+    return text
