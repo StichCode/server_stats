@@ -18,7 +18,8 @@ memory = memory_usage()["Memory"]
 @bot.message_handler(commands=['start'])
 def start_message(message):
     bot.send_message(message.chat.id, "Hi, what you want to known?\n"
-                                      "I can show you info about RAM | MEMORY | CPY", reply_markup=keyboard_main)
+                                      "I can show you info about:\n"
+                                      "RAM | MEMORY | CPU ", reply_markup=reply_markup)
 
 
 @bot.message_handler(commands=["ram", "memory", "cpu"])
@@ -40,11 +41,11 @@ def send_info(message):
 clear_markup = ReplyKeyboardRemove(selective=False)
 
 
-memory_btn = InlineKeyboardButton(text="/memory", callback_data="/memory")
-ram_btn = InlineKeyboardButton(text="/ram", callback_data="/ram")
-cpy_btn = InlineKeyboardButton(text="/cpy", callback_data="/cpy")
+memory_btn = InlineKeyboardButton(text="/memory", callback_data="memory")
+ram_btn = InlineKeyboardButton(text="/ram", callback_data="ram")
+cpy_btn = InlineKeyboardButton(text="/cpy", callback_data="cpy")
 
 custom_keyboard = [[memory_btn, ram_btn, cpy_btn]]
-keyboard_main = InlineKeyboardMarkup(custom_keyboard)
+reply_markup = InlineKeyboardMarkup(custom_keyboard)
 
 bot.polling(none_stop=False, interval=0.5, timeout=0)
