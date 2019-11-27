@@ -28,6 +28,7 @@ def send_info(message):
     if message.text == "/ram":
         bot.send_message(message.chat.id, prepare_data())
     elif message.text == "/memory":
+        print(message)
         bot.send_message(message.chat.id, "___________MEMORY______________\n"
                                           f"Total   : {round(memory['total'], 3)} GiB\n"
                                           f"Used    : {round(memory['used'], 3)} GiB\n"
