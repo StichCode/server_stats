@@ -1,9 +1,10 @@
 import os
+from pprint import pprint
 
 import telebot
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 
-from bot.get_info import get_ram, memory_usage
+from bot.get_info import memory_usage, prepare_data
 
 TOKEN = os.environ.get("TOKEN")
 
@@ -58,7 +59,7 @@ custom_keyboard = [[memory_btn, ram_btn, cpy_btn]]
 reply_markup = InlineKeyboardMarkup(custom_keyboard)
 
 text_ram = "____________RAM____________"
-for line in get_ram():
+for line in prepare_data()[:5]:
     cmd_line = ""
     text_ram += "\n"
     text_ram += f"Pid        : {line['pid']}\n"
@@ -66,12 +67,7 @@ for line in get_ram():
     if line['cmd line']:
         pass
     else:
-        for cmd in line['cmd line']:
-            cmd_line += f"{cmd},\n"
-    text_ram += f"Cmd Lines  :  " \
-                "              {" \
-                f"{cmd_line}" \
-                "               }\n"
+        text_ram += f"Cmd line   : {line['cmd line']}\n"
     text_ram += f"Time works : {line['time works']}\n"
     text_ram += "___________________________"
 

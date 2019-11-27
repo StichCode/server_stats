@@ -1,9 +1,10 @@
 from datetime import datetime, timedelta
+from operator import itemgetter
 
 import psutil
 
 
-def get_ram():
+def __get_ram():
     """Method for getting ram system"""
     result = []
     attrs = ['pid', 'memory_percent', 'name', 'cmdline', 'cpu_times',
@@ -13,7 +14,7 @@ def get_ram():
         result.append({
             "pid": proc.pid,
             "name": proc.name(),
-            "ram %": proc.memory_percent(),
+            "ram": proc.memory_percent(),
             "cmd line": proc.cmdline(),
             "status": proc.status(),
             "start time": time_start.strftime('%d-%m-%Y %H:%M:%S'),
@@ -38,3 +39,7 @@ def memory_usage():
         "%": disk.percent
     }
     return memory_disk
+
+
+def prepare_data():
+    return sorted(__get_ram(), key=itemgetter("ram"), reverse=True)
