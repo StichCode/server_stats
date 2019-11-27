@@ -42,4 +42,14 @@ def memory_usage():
 
 
 def prepare_data():
-    return sorted(__get_ram(), key=itemgetter("ram"), reverse=True)
+    text_ram = "____________RAM____________"
+    for line in sorted(__get_ram(), key=itemgetter("ram"), reverse=True)[:5]:
+        text_ram += "\n"
+        text_ram += f"Pid        : {line['pid']}\n"
+        text_ram += f"Ram        : {round(line['ram'], 2)}%\n"
+        text_ram += f"Name       : {line['name']}\n"
+        text_ram += f"Cmd line   : {line['cmd line'][:2]}\n"
+        text_ram += f"Time works : {line['time works']}\n"
+        text_ram += "___________________________"
+
+    return text_ram

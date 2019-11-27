@@ -26,7 +26,7 @@ def start_message(message):
 @bot.message_handler(commands=["ram", "memory", "cpu"])
 def send_info(message):
     if message.text == "/ram":
-        bot.send_message(message.chat.id, text_ram)
+        bot.send_message(message.chat.id, prepare_data())
     elif message.text == "/memory":
         bot.send_message(message.chat.id, "___________MEMORY______________\n"
                                           f"Total   : {round(memory['total'], 3)} GiB\n"
@@ -57,15 +57,5 @@ cpy_btn = InlineKeyboardButton(text="/cpy", callback_data="cpy")
 custom_keyboard = [[memory_btn, ram_btn, cpy_btn]]
 reply_markup = InlineKeyboardMarkup(custom_keyboard)
 
-text_ram = "____________RAM____________"
-for line in prepare_data()[:5]:
-    cmd_line = ""
-    text_ram += "\n"
-    text_ram += f"Pid        : {line['pid']}\n"
-    text_ram += f"Ram        : {round(line['ram'], 2)}%\n"
-    text_ram += f"Name       : {line['name']}\n"
-    text_ram += f"Cmd line   : {line['cmd line'][:2]}\n"
-    text_ram += f"Time works : {line['time works']}\n"
-    text_ram += "___________________________"
 
 bot.polling(none_stop=False, interval=0.5, timeout=0)
