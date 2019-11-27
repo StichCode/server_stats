@@ -2,6 +2,7 @@ import os
 
 import telebot
 from telebot import types
+from telebot.types import InlineKeyboardMarkup
 
 from bot.get_info import get_ram, memory_usage
 
@@ -25,11 +26,11 @@ def send_info(message):
     if message.text == "/ram":
         bot.send_message(message.chat.id, "Not Works now")
     elif message.text == "/memory":
-        bot.send_message(message.chat.id, "___________MEMORY______________"
-                                          f"Total   : f{memory['total']}\n"
-                                          f"Used    : f{memory['used']}\n"
-                                          f"Free    : f{memory['free']}\n"
-                                          f"Percent : f{memory['%']}\n")
+        bot.send_message(message.chat.id, "___________MEMORY______________\n"
+                                          f"Total   : {memory['total']} GiB\n"
+                                          f"Used    : {memory['used']} GiB\n"
+                                          f"Free    : {memory['free']} GiB\n"
+                                          f"Percent : {memory['%']} %\n")
     elif message.text == "/cpu":
         bot.send_message(message.chat.id, "IT's not worked")
     else:
@@ -44,6 +45,6 @@ ram_btn = types.InlineKeyboardButton("/ram", callback_data="/ram")
 cpy_btn = types.InlineKeyboardButton("/cpy", callback_data="/cpy")
 
 custom_keyboard = [[memory_btn, ram_btn, cpy_btn]]
-keyboard_main = telebot.types.ReplyKeyboardMarkup(custom_keyboard)
+keyboard_main = InlineKeyboardMarkup(custom_keyboard)
 
 bot.polling(none_stop=False, interval=0.5, timeout=0)
