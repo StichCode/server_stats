@@ -27,7 +27,7 @@ def start_message(message):
 
 @bot.message_handler(content_types=["text"])
 def send_info(message):
-    if has_user_permission(message.from_user.id):
+    if has_user_permission(int(message.from_user.id)):
         if message.text == "/ram":
             bot.send_message(message.chat.id, prepare_data())
         elif message.text == "/memory":

@@ -54,6 +54,8 @@ def has_user_permission(id_users):
         return True
     return False
 
+print(has_user_permission(295290188))
+
 
 def edit_user_settings(id_user, id_to_change):
     """Gives user login permission"""
