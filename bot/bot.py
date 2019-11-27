@@ -63,11 +63,9 @@ for line in prepare_data()[:5]:
     cmd_line = ""
     text_ram += "\n"
     text_ram += f"Pid        : {line['pid']}\n"
+    text_ram += f"Ram        : {line['ram']}%\n",
     text_ram += f"Name       : {line['name']}\n"
-    if line['cmd line']:
-        pass
-    else:
-        text_ram += f"Cmd line   : {line['cmd line']}\n"
+    text_ram += f"Cmd line   : {line['cmd line']}\n"
     text_ram += f"Time works : {line['time works']}\n"
     text_ram += "___________________________"
 
