@@ -1,5 +1,4 @@
 import os
-from pprint import pprint
 
 import telebot
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton

@@ -1,8 +1,10 @@
+import os
 import sqlite3
 
 
 def create_db():
     """ Create database """
+    os.system("rm database_status.db")
     conn = __connection()
     cursor = conn.cursor()
 
@@ -54,8 +56,7 @@ def has_user_permission(id_users):
         return True
     return False
 
-print(has_user_permission(295290188))
-
+create_db()
 
 def edit_user_settings(id_user, id_to_change):
     """Gives user login permission"""
