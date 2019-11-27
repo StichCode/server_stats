@@ -13,7 +13,7 @@ bot = telebot.TeleBot(TOKEN)
 
 # / memory -> dict / ram -> dict / cpy -> get_pid -> dict
 memory = memory_usage()["Memory"]
-emoji = u"U+2744"
+emoji = u"\u2744"
 
 
 @bot.message_handler(commands=['start'])
@@ -70,4 +70,4 @@ for line in get_ram():
     text_ram += "___________________________"
 
 
-bot.polling(none_stop=True, interval=5, timeout=0)
+bot.polling(none_stop=False, interval=0.5, timeout=0)
