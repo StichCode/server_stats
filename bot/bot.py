@@ -18,7 +18,6 @@ emoji = u"\u2744"
 
 @bot.message_handler(commands=['start'])
 def start_message(message):
-    print(message)
     bot.send_message(message.chat.id, "Hi, what you want to known?\n"
                                       "I can show you info about:\n"
                                       f"RAM      {emoji}\n"
@@ -28,7 +27,7 @@ def start_message(message):
 
 @bot.message_handler(content_types=["text"])
 def send_info(message):
-    if has_user_permission(message["from_user"]["id"]):
+    if has_user_permission(message.from_user.id):
         if message.text == "/ram":
             bot.send_message(message.chat.id, prepare_data())
         elif message.text == "/memory":
@@ -47,7 +46,7 @@ def send_info(message):
                                               f"CPU    {emoji}")
     else:
         bot.send_message(message.chat.id, "You don't have permission to use bot\n")
-        create_new_user(message["from_user"]["id"], message["from_user"]["username"])
+        create_new_user(message.from_user.id, message.from_user.username)
 
 
 memory_btn = InlineKeyboardButton(text="/memory", callback_data="memory")
