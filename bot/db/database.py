@@ -85,3 +85,13 @@ def get_users_to_permissions():
         text += "__________________________________\n"
         count += 1
     return text
+
+
+def get_admin():
+    # Need optimisation for this
+    conn = __connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM users where admin = 1")
+    admin = cursor.fetchone()
+    conn.close()
+    return admin

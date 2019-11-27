@@ -23,22 +23,31 @@ def __get_ram():
     return result
 
 
-def get_cpy_percent(pid, interval=0.0):
+def get_cpy_percent(interval=1.0):
     """ (-__-) """
-    process = psutil.Process(pid)
-    return {"cpu": process.cpu_percent(interval=interval)}
+    processes = sorted(__get_ram(), key=itemgetter("ram"), reverse=True)[:5]
+    text_cpu = "_________CPU_________"
+    for proc in processes:
+        text_cpu += "\n"
+        text_cpu += f"Pid        : {proc['pid']}\n"
+        text_cpu += f"CPU        : {psutil.Process(proc['pid']).cpu_percent(interval)}\n"
+        text_cpu += f"Ram        : {round(proc['ram'], 2)}%\n"
+        text_cpu += f"Name       : {proc['name']}\n"
+        text_cpu += f"Cmd line   : {proc['cmd line'][:2]}\n"
+        text_cpu += f"Time works : {proc['time works']}\n"
+        text_cpu += "___________________________"
+    print(text_cpu)
+    # return {"cpu": process.cpu_percent(interval=interval)}
 
 
 def memory_usage():
-    memory_disk = dict()
+    """ Return info about message usage system"""
     disk = psutil.disk_usage('/')
-    memory_disk["Memory"] = {
-        "total": disk.total / (1024.0 ** 3),
-        "used": disk.used / (1024.0 ** 3),
-        "free": disk.free / (1024.0 ** 3),
-        "%": disk.percent
-    }
-    return memory_disk
+    return "___________MEMORY______________\n " \
+           f"Total   : {round(disk.total / (1024.0 ** 3), 3)} GiB\n" \
+           f"Used    : {round(disk.used / (1024.0 ** 3), 3)} GiB\n" \
+           f"Free    : {round(disk.free / (1024.0 ** 3), 3)} GiB\n" \
+           f"Percent : {round(disk.percent, 3)} %\n"
 
 
 def prepare_data():
@@ -51,5 +60,4 @@ def prepare_data():
         text_ram += f"Cmd line   : {line['cmd line'][:2]}\n"
         text_ram += f"Time works : {line['time works']}\n"
         text_ram += "___________________________"
-
     return text_ram
