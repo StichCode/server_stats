@@ -1,10 +1,8 @@
-import os
 import sqlite3
 
 
 def create_db():
     """ Create database """
-    os.system("rm bot/database_status.db")
     conn = __connection()
     cursor = conn.cursor()
 
@@ -52,8 +50,6 @@ def has_user_permission(id_users):
     cursor.execute("SELECT sign_in FROM users where id = {}".format(id_users))
     has_permission = cursor.fetchone()
     conn.close()
-    print(has_permission)
-    print(type(has_permission))
     if has_permission is None or has_permission[0] == 0:
         return False
     return True
