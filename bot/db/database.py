@@ -48,9 +48,9 @@ def has_user_permission(id_users):
     conn = __connection()
     cursor = conn.cursor()
     cursor.execute("SELECT sign_in FROM users where id = {}".format(id_users))
-    has_permission = cursor.fetchone()[0]
+    has_permission = cursor.fetchone()
     conn.close()
-    if has_permission == 1:
+    if has_permission[0] == 1:
         return True
     return False
 
