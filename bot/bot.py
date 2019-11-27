@@ -1,8 +1,7 @@
 import os
 
 import telebot
-from telebot import types
-from telebot.types import InlineKeyboardMarkup
+from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardRemove
 
 from bot.get_info import get_ram, memory_usage
 
@@ -18,7 +17,8 @@ memory = memory_usage()["Memory"]
 
 @bot.message_handler(commands=['start'])
 def start_message(message):
-    bot.send_message(message.chat.id, "Hi, what you want to known?", reply_markup=keyboard_main)
+    bot.send_message(message.chat.id, "Hi, what you want to known?\n"
+                                      "I can show you info about RAM | MEMORY | CPY", reply_markup=keyboard_main)
 
 
 @bot.message_handler(commands=["ram", "memory", "cpu"])
@@ -27,22 +27,22 @@ def send_info(message):
         bot.send_message(message.chat.id, "Not Works now")
     elif message.text == "/memory":
         bot.send_message(message.chat.id, "___________MEMORY______________\n"
-                                          f"Total   : {memory['total']} GiB\n"
-                                          f"Used    : {memory['used']} GiB\n"
-                                          f"Free    : {memory['free']} GiB\n"
-                                          f"Percent : {memory['%']} %\n")
+                                          f"Total   : {round(memory['total'],3)} GiB\n"
+                                          f"Used    : {round(memory['used'], 3)} GiB\n"
+                                          f"Free    : {round(memory['free'], 3)} GiB\n"
+                                          f"Percent : {round(memory['%'], 3)} %\n")
     elif message.text == "/cpu":
         bot.send_message(message.chat.id, "IT's not worked")
     else:
         bot.send_message(message.chat.id, "You can saw only: ram or memory info")
 
 
-clear_markup = types.ReplyKeyboardRemove(selective=False)
+clear_markup = ReplyKeyboardRemove(selective=False)
 
 
-memory_btn = types.InlineKeyboardButton("/memory", callback_data="/memory")
-ram_btn = types.InlineKeyboardButton("/ram", callback_data="/ram")
-cpy_btn = types.InlineKeyboardButton("/cpy", callback_data="/cpy")
+memory_btn = InlineKeyboardButton(text="/memory", callback_data="/memory")
+ram_btn = InlineKeyboardButton(text="/ram", callback_data="/ram")
+cpy_btn = InlineKeyboardButton(text="/cpy", callback_data="/cpy")
 
 custom_keyboard = [[memory_btn, ram_btn, cpy_btn]]
 keyboard_main = InlineKeyboardMarkup(custom_keyboard)
