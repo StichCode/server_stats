@@ -1,15 +1,13 @@
 import os
 
 import telebot
-from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardRemove
+from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 from bot.get_info import get_ram, memory_usage
-
 
 TOKEN = os.environ.get("TOKEN")
 
 bot = telebot.TeleBot(TOKEN)
-
 
 # / memory -> dict / ram -> dict / cpy -> get_pid -> dict
 memory = memory_usage()["Memory"]
@@ -31,7 +29,7 @@ def send_info(message):
         bot.send_message(message.chat.id, text_ram)
     elif message.text == "/memory":
         bot.send_message(message.chat.id, "___________MEMORY______________\n"
-                                          f"Total   : {round(memory['total'],3)} GiB\n"
+                                          f"Total   : {round(memory['total'], 3)} GiB\n"
                                           f"Used    : {round(memory['used'], 3)} GiB\n"
                                           f"Free    : {round(memory['free'], 3)} GiB\n"
                                           f"Percent : {round(memory['%'], 3)} %\n")
@@ -59,15 +57,22 @@ cpy_btn = InlineKeyboardButton(text="/cpy", callback_data="cpy")
 custom_keyboard = [[memory_btn, ram_btn, cpy_btn]]
 reply_markup = InlineKeyboardMarkup(custom_keyboard)
 
-
 text_ram = "____________RAM____________"
 for line in get_ram():
+    cmd_line = ""
     text_ram += "\n"
     text_ram += f"Pid        : {line['pid']}\n"
     text_ram += f"Name       : {line['name']}\n"
-    text_ram += f"Cmd Lines  : {str(line['cmd line'])}\n"
+    if line['cmd line']:
+        pass
+    else:
+        for cmd in line['cmd line']:
+            cmd_line += f"{cmd},\n"
+    text_ram += f"Cmd Lines  :  " \
+                "              {" \
+                f"{cmd_line}" \
+                "               }\n"
     text_ram += f"Time works : {line['time works']}\n"
     text_ram += "___________________________"
-
 
 bot.polling(none_stop=False, interval=0.5, timeout=0)
