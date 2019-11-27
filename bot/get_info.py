@@ -38,3 +38,10 @@ def memory_usage():
         "%": disk.percent
     }
     return memory_disk
+
+
+for i in get_ram():
+    print(i["pid"])
+    print(i["name"])
+    print(str(i["cmd line"]))
+    print(i["time works"])
