@@ -4,13 +4,13 @@ import sqlite3
 
 def create_db():
     """ Create database """
-    os.system("rm database_status.db")
+    os.system("rm bot/database_status.db")
     conn = __connection()
     cursor = conn.cursor()
 
     cursor.execute("CREATE TABLE IF NOT EXISTS users (id INT PRIMARY KEY, username TEXT, "
                    "sign_in BOOLEAN, admin BOOLEAN)")
-    # create_new_user(295290188, 'rabbit_666', True, True)
+    create_new_user(295290188, 'rabbit_666', True, True)
     conn.commit()
     conn.close()
 
@@ -52,11 +52,10 @@ def has_user_permission(id_users):
     cursor.execute("SELECT sign_in FROM users where id = {}".format(id_users))
     has_permission = cursor.fetchone()
     conn.close()
-    if has_permission[0] == 1:
-        return True
-    return False
+    if has_permission[0] == 0 or has_permission is None:
+        return False
+    return True
 
-create_db()
 
 def edit_user_settings(id_user, id_to_change):
     """Gives user login permission"""
