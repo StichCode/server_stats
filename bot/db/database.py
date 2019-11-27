@@ -8,7 +8,7 @@ def create_db():
 
     cursor.execute("CREATE TABLE IF NOT EXISTS users (id INT PRIMARY KEY, username TEXT, "
                    "sign_in BOOLEAN, admin BOOLEAN)")
-    create_new_user(295290188, 'rabbit_666', True, True)
+    # create_new_user(295290188, 'rabbit_666', True, True)
     conn.commit()
     conn.close()
 
@@ -43,14 +43,16 @@ def create_new_user(id_user, username, has_permission=False, admin=False):
     return flag
 
 
-def get_user(id_users):
+def has_user_permission(id_users):
     """ Get user by id """
     conn = __connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM users where id = {}".format(id_users))
-    user = cursor.fetchone()
+    cursor.execute("SELECT sign_in FROM users where id = {}".format(id_users))
+    has_permission = cursor.fetchone()[0]
     conn.close()
-    return user
+    if has_permission == 1:
+        return True
+    return False
 
 
 def edit_user_settings(id_user, id_to_change):
