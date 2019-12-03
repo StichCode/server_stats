@@ -58,7 +58,8 @@ def start_message(message):
             users = get_users_to_permissions()
             if users is not None:
                 bot.send_message(user, "___This users want permissions____", reply_markup=users_markup(users))
-            bot.send_message(user, "No users what want to have permission", reply_markup=markup)
+            else:
+                bot.send_message(user, "No users what want to have permission", reply_markup=markup)
         elif str(call.data).isdigit():
             changed = edit_user_settings(user, int(call.data))
             bot.send_message(user, changed, reply_markup=markup)
