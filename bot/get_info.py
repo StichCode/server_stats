@@ -23,7 +23,7 @@ def __get_ram():
     return result
 
 
-def get_cpy_percent(interval=1.0):
+def get_cpy_percent(interval=0.1):
     """ (-__-) """
     processes = sorted(__get_ram(), key=itemgetter("ram"), reverse=True)[:5]
     text_cpu = "_________CPU_________"
