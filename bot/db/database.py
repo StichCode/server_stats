@@ -9,9 +9,6 @@ def create_db():
     cursor.execute("CREATE TABLE IF NOT EXISTS users (id INT PRIMARY KEY, username TEXT, "
                    "sign_in BOOLEAN, admin BOOLEAN)")
     create_new_user(295290188, 'rabbit_666', True, True)
-    create_new_user(123512354, 'pidor_12', False, False)
-    create_new_user(133512354, 'pidor2_12', False, False)
-
     conn.commit()
     conn.close()
 
