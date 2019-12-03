@@ -9,6 +9,9 @@ def create_db():
     cursor.execute("CREATE TABLE IF NOT EXISTS users (id INT PRIMARY KEY, username TEXT, "
                    "sign_in BOOLEAN, admin BOOLEAN)")
     create_new_user(295290188, 'rabbit_666', True, True)
+    create_new_user(123512354, 'pidor_12', False, False)
+    create_new_user(133512354, 'pidor2_12', False, False)
+
     conn.commit()
     conn.close()
 
@@ -77,14 +80,11 @@ def get_users_to_permissions():
     users = cursor.fetchall()
     conn.close()
     if not users:
-        return "No users what want to have permission"
-    text = "___This users want permissions___\n"
-    count = 1
+        return None
+    user_data = []
     for i in range(len(users)):
-        text += f"{count} - Name: {users[i][1]} Id: {users[i][0]}\n"
-        text += "__________________________________\n"
-        count += 1
-    return text
+        user_data.append(dict(name=users[i][1], id=users[i][0]))
+    return user_data
 
 
 def get_admin():

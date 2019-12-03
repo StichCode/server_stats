@@ -2,15 +2,13 @@ import os
 import time
 
 import telebot
-from telebot import types
 
-from bot.db.database import create_db, has_user_permission, create_new_user, get_users_to_permissions, get_admin
+from bot.db.database import create_db, has_user_permission, create_new_user, get_users_to_permissions, get_admin, \
+    edit_user_settings
 from bot.get_info import memory_usage, prepare_data, get_cpy_percent
-from bot.markups import main_markup
+from bot.markups import main_markup, users_markup
 
-TOKEN = os.environ.get("TOKEN")
-
-bot = telebot.TeleBot(TOKEN)
+bot = telebot.TeleBot(os.environ.get("TOKEN"))
 
 # / memory -> dict / ram -> dict / cpy -> get_pid -> dict
 emoji_snow = u"\u2744"
@@ -21,12 +19,18 @@ welcome_message = "Hi, what you want to known?\n" \
                   f"MEMORY   {emoji_snow}\n" \
                   f"CPU      {emoji_snow}"
 
+
+def like_id(s):
+    if s[0] in ('-', '+'):
+        return s[1:].isdigit()
+    return s.isdigit()
+
+
 # user = 0
 
 
-@bot.message_handler(commands=['start'])
+@bot.message_handler(commands=['start', 'help'])
 def start_message(message):
-    # global user
     user = message.chat.id
     if has_user_permission(message.chat.id):
         markup = main_markup()
@@ -39,15 +43,25 @@ def start_message(message):
 
     @bot.callback_query_handler(func=lambda call: True)
     def callback(call):
-        # markup = main_markup()
-        if call.data == "/ram":
+        markup = main_markup()
+        if call.data == "/start":
+            start_message()
+        elif call.data == "/ram":
             bot.send_message(user, prepare_data(), reply_markup=markup)
         elif call.data == "/memory":
             bot.send_message(user, memory_usage(), reply_markup=markup)
         elif call.data == "/cpu":
-            bot.send_message(user, get_cpy_percent(), reply_markup=markup)
+            cpu = get_cpy_percent()
+            bot.send_message(user, "Now we will prepare information output for you.\nPlease wait.\nThanks.")
+            bot.send_message(user, cpu, reply_markup=markup)
         elif call.data == "/want_permissions":
-            bot.send_message(user, get_users_to_permissions(), reply_markup=markup)
+            users = get_users_to_permissions()
+            if users is not None:
+                bot.send_message(user, "___This users want permissions____", reply_markup=users_markup(users))
+            bot.send_message(user, "No users what want to have permission", reply_markup=markup)
+        elif str(call.data).isdigit():
+            changed = edit_user_settings(user, int(call.data))
+            bot.send_message(user, changed, reply_markup=markup)
 
 
 def start():

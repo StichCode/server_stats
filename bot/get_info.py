@@ -1,7 +1,10 @@
+import subprocess
 from datetime import datetime, timedelta
 from operator import itemgetter
 
 import psutil
+
+from bot.db.database import get_users_to_permissions
 
 
 def __get_ram():
@@ -36,8 +39,7 @@ def get_cpy_percent(interval=0.1):
         text_cpu += f"Cmd line   : {proc['cmd line'][:2]}\n"
         text_cpu += f"Time works : {proc['time works']}\n"
         text_cpu += "___________________________"
-    print(text_cpu)
-    # return {"cpu": process.cpu_percent(interval=interval)}
+    return text_cpu
 
 
 def memory_usage():
@@ -61,3 +63,8 @@ def prepare_data():
         text_ram += f"Time works : {line['time works']}\n"
         text_ram += "___________________________"
     return text_ram
+
+
+def check_connections():
+    output = subprocess.check_output("w")
+    return output.decode()
