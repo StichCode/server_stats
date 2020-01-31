@@ -1,14 +1,19 @@
-import os
 import time
 
 import telebot
+from telebot import apihelper
 
 from bot.db.database import create_db, has_user_permission, create_new_user, get_users_to_permissions, get_admin, \
     edit_user_settings
 from bot.get_info import memory_usage, prepare_data, get_cpy_percent
 from bot.markups import main_markup, users_markup
+from config import Config
 
-bot = telebot.TeleBot(os.environ.get("TOKEN"))
+
+apihelper.proxy = {'https': f'socks5://{Config.USERNAME_SOCKS}:{Config.PASSWORD_SOCKS}'
+                            f'@{Config.ADDRESS_SOCKS}:{Config.PORT_SOCKS}'}
+
+bot = telebot.TeleBot(Config.TOKEN)
 
 # / memory -> dict / ram -> dict / cpy -> get_pid -> dict
 emoji_snow = u"\u2744"
