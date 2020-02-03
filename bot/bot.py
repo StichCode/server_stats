@@ -34,7 +34,7 @@ def like_id(s):
 @bot.message_handler(commands=['start', 'help'])
 def start_message(message):
     if has_user_permission(message.chat.id):
-        bot.send_message(message.chat.id, welcome_message, reply_markup=starting_mk())
+        bot.send_message(message.chat.id, welcome_message, reply_markup=main_markup())
     else:
         bot.send_message(message.chat.id, "You don't have permission to use bot")
         create_new_user(message.from_user.id, message.from_user.username)
@@ -45,8 +45,9 @@ def start_message(message):
 @bot.message_handler(func=lambda message: has_user_permission(message.chat.id))
 def ram(message):
     if message.text == "Memory":
-        bot.send_message(message.chat.id, memory_usage(), reply_markup=remove())
-#
+        bot.send_message(message.chat.id, memory_usage())
+        # bot.send_message(message.chat.id, reply_markup=)
+
 # @bot.callback_query_handler(func=lambda call: True)
 # def callback(call):
 #     if call.data == "/ram":

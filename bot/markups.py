@@ -1,6 +1,6 @@
 from telebot import types
 
-BACK = types.InlineKeyboardButton('Back', callback_data="/start")
+BACK = types.InlineKeyboardButton('Back')
 
 
 def starting_mk():
@@ -18,13 +18,20 @@ def starting_mk():
 def remove():
     return types.ReplyKeyboardRemove()
 
+
+def back_btn():
+    mk = types.InlineKeyboardMarkup()
+
+    return mk
+
+
 def __default():
     markup = types.InlineKeyboardMarkup()
-    button_ram = types.InlineKeyboardButton('RAM', callback_data="/ram")
-    button_cpu = types.InlineKeyboardButton('CPU', callback_data="/cpu")
-    button_memory = types.InlineKeyboardButton('Memory', callback_data="/memory")
-    button_permission = types.InlineKeyboardButton('Want Permission', callback_data="/want_permissions")
-    button_notes = types.InlineKeyboardButton('Notes', callback_data='/notes')
+    button_ram = types.InlineKeyboardButton('RAM')
+    button_cpu = types.InlineKeyboardButton('CPU')
+    button_memory = types.InlineKeyboardButton('Memory')
+    button_permission = types.InlineKeyboardButton('Want Permission')
+    button_notes = types.InlineKeyboardButton('Notes')
     markup.row(button_cpu, button_ram)
     markup.row(button_memory, button_permission)
     markup.row(button_notes)
