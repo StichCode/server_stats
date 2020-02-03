@@ -50,7 +50,7 @@ def start_message(message):
     def callback(call):
         markup = main_markup()
         if call.data == "/start" or "/back":
-            start_message()
+            start_message(call)
         elif call.data == "/ram":
             bot.send_message(user, prepare_data(), reply_markup=markup)
         elif call.data == "/memory":
