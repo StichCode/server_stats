@@ -1,4 +1,4 @@
-/venv/
-/.idea/
-/bot/__pycache__/
+venv
+.idea
+__pycache__
 *.db

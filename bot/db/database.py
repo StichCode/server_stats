@@ -77,11 +77,18 @@ def get_users_to_permissions():
     users = cursor.fetchall()
     conn.close()
     if not users:
-        return "No users what want to have permission"
-    text = "___This users want permissions___\n"
-    count = 1
+        return None
+    user_data = []
     for i in range(len(users)):
-        text += f"{count} - Name: {users[i][1]} Id: {users[i][0]}\n"
-        text += "__________________________________\n"
-        count += 1
-    return text
+        user_data.append(dict(name=users[i][1], id=users[i][0]))
+    return user_data
+
+
+def get_admin():
+    # Need optimisation for this
+    conn = __connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM users where admin = 1")
+    admin = cursor.fetchone()
+    conn.close()
+    return admin

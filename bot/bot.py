@@ -1,64 +1,82 @@
-import os
+import time
 
 import telebot
-from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
+from telebot import apihelper
 
-from bot.db.database import create_db, has_user_permission, create_new_user, get_users_to_permissions
-from bot.get_info import memory_usage, prepare_data
+from bot.db.database import create_db, has_user_permission, create_new_user, get_users_to_permissions, get_admin, \
+    edit_user_settings
+from bot.get_info import memory_usage, prepare_data, get_cpy_percent
+from bot.markups import main_markup, users_markup
+from config import Config
 
-TOKEN = os.environ.get("TOKEN")
 
-bot = telebot.TeleBot(TOKEN)
+apihelper.proxy = {'https': f'socks5://{Config.USERNAME_SOCKS}:{Config.PASSWORD_SOCKS}'
+                            f'@{Config.ADDRESS_SOCKS}:{Config.PORT_SOCKS}'}
+
+bot = telebot.TeleBot(Config.TOKEN)
 
 # / memory -> dict / ram -> dict / cpy -> get_pid -> dict
-memory = memory_usage()["Memory"]
-emoji = u"\u2744"
+emoji_snow = u"\u2744"
+
+welcome_message = "Hi, what you want to known?\n" \
+                  "I can show you info about:\n" \
+                  f"RAM      {emoji_snow}\n" \
+                  f"MEMORY   {emoji_snow}\n" \
+                  f"CPU      {emoji_snow}"
 
 
-@bot.message_handler(commands=['start'])
+def like_id(s):
+    if s[0] in ('-', '+'):
+        return s[1:].isdigit()
+    return s.isdigit()
+
+
+# user = 0
+
+
+@bot.message_handler(commands=['start', 'help'])
 def start_message(message):
-    bot.send_message(message.chat.id, "Hi, what you want to known?\n"
-                                      "I can show you info about:\n"
-                                      f"RAM      {emoji}\n"
-                                      f"MEMORY   {emoji}\n"
-                                      f"CPU      {emoji}", reply_markup=reply_markup)
-
-
-@bot.message_handler(content_types=["text"])
-def send_info(message):
-    perm = has_user_permission(message.from_user.id)
-    if perm:
-        if message.text == "/ram":
-            bot.send_message(message.chat.id, prepare_data())
-        elif message.text == "/memory":
-            bot.send_message(message.chat.id, "___________MEMORY______________\n"
-                                              f"Total   : {round(memory['total'], 3)} GiB\n"
-                                              f"Used    : {round(memory['used'], 3)} GiB\n"
-                                              f"Free    : {round(memory['free'], 3)} GiB\n"
-                                              f"Percent : {round(memory['%'], 3)} %\n")
-        elif message.text == "/cpu":
-            bot.send_message(message.chat.id, "IT's not worked")
-        elif message.text == "/want_permissions":
-            bot.send_message(message.chat.id, get_users_to_permissions())
-
-        else:
-            bot.send_message(message.chat.id, "I can show you only:\n"
-                                              f"RAM    {emoji}\n"
-                                              f"MEMORY {emoji}\n"
-                                              f"CPU    {emoji}")
-
+    user = message.chat.id
+    if has_user_permission(message.chat.id):
+        markup = main_markup()
+        bot.send_message(message.chat.id, welcome_message, reply_markup=markup)
     else:
-        bot.send_message(message.chat.id, "You don't have permission to use bot\n")
+        bot.send_message(message.chat.id, "You don't have permission to use bot")
         create_new_user(message.from_user.id, message.from_user.username)
+        bot.send_message(get_admin()[0], f"This user tried to request information\n"
+                                         f" {message.from_user.username}({message.from_user.id})")
+
+    @bot.callback_query_handler(func=lambda call: True)
+    def callback(call):
+        markup = main_markup()
+        if call.data == "/start":
+            start_message()
+        elif call.data == "/ram":
+            bot.send_message(user, prepare_data(), reply_markup=markup)
+        elif call.data == "/memory":
+            bot.send_message(user, memory_usage(), reply_markup=markup)
+        elif call.data == "/cpu":
+            cpu = get_cpy_percent()
+            bot.send_message(user, "Now we will prepare information output for you.\nPlease wait.\nThanks.")
+            bot.send_message(user, cpu, reply_markup=markup)
+        elif call.data == "/want_permissions":
+            users = get_users_to_permissions()
+            if users is not None:
+                bot.send_message(user, "___This users want permissions____", reply_markup=users_markup(users))
+            else:
+                bot.send_message(user, "No users what want to have permission", reply_markup=markup)
+        elif str(call.data).isdigit():
+            changed = edit_user_settings(user, int(call.data))
+            bot.send_message(user, changed, reply_markup=markup)
 
 
-memory_btn = InlineKeyboardButton(text="/memory", callback_data="memory")
-ram_btn = InlineKeyboardButton(text="/ram", callback_data="ram")
-cpy_btn = InlineKeyboardButton(text="/cpy", callback_data="cpy")
-
-custom_keyboard = [[memory_btn, ram_btn, cpy_btn]]
-reply_markup = InlineKeyboardMarkup(custom_keyboard)
+def start():
+    while True:
+        try:
+            bot.polling(none_stop=True, interval=0.5, timeout=0)
+        except Exception:
+            time.sleep(10)
 
 
 create_db()
-bot.polling(none_stop=False, interval=0.5, timeout=0)
+start()
