@@ -34,7 +34,7 @@ def like_id(s):
 @bot.message_handler(commands=['start', 'help'])
 def start_message(message):
     if has_user_permission(message.chat.id):
-        bot.send_message(message.chat.id, welcome_message, reply_markup=main_markup())
+        ms = bot.send_message(message.chat.id, welcome_message, reply_markup=main_markup())
     else:
         bot.send_message(message.chat.id, "You don't have permission to use bot")
         create_new_user(message.from_user.id, message.from_user.username)
@@ -44,44 +44,34 @@ def start_message(message):
     @bot.callback_query_handler(func=lambda call: True)
     def ram(call):
         if call.data == "/memory":
-            bot.send_message(message.chat.id, memory_usage())
+            bot.edit_message_text(memory_usage(), message.chat.id, ms.message_id, reply_markup=main_markup())
 
-        if call.data == "/ram":
-            bot.send_message(message.chat.id, prepare_data())
-#
-        if call.data == "/memory":
-            bot.send_message(message.chat.id, memory_usage())
+        elif call.data == "/ram":
+            bot.edit_message_text(prepare_data(), message.chat.id, ms.message_id, reply_markup=main_markup())
 
-        if call.data == "/cpu":
-            bot.send_message(message.chat.id, "Now we will prepare information output for you.\nPlease wait.\nThanks.")
-            cpu = get_cpy_percent()
-            bot.send_message(message.chat.id, cpu)
+        elif call.data == "/cpu":
+            bot.edit_message_text(get_cpy_percent(), message.chat.id, ms.message_id, reply_markup=main_markup())
 
-        if call.data == "/notes":
-            bot.send_message(message.chat.id, "What you want to do?")
+        elif call.data == "/notes":
+            bot.edit_message_text("What you want to do?", message.chat.id, ms.message_id, reply_markup=notes_markup())
 
-        if call.data == "all_notes":
-            info = get_all_notes(message.chat.id)
-            bot.send_message(message.chat.id, info)
-#
-# @bot.callback_query_handler(func=lambda call: True)
-# def callback(call):
-#     if call.data == "create_new_note":
-#         bot.send_message(user, "Enter note, what you want to save")
-#         if create_new_note(user, call.data):
-#             bot.send_message(user, "All has been saved")
-#
-# @bot.callback_query_handler(func=lambda call: True)
-# def callback(call):
-#     if call.data == "/want_permissions":
-#         users = get_users_to_permissions()
-#         if users is not None:
-#             bot.send_message(user, "___This users want permissions____", reply_markup=users_markup(users))
-#         else:
-#             bot.send_message(user, "No users what want to have permission", reply_markup=markup)
-#     elif str(call.data).isdigit():
-#         changed = edit_user_settings(user, int(call.data))
-#         bot.send_message(user, changed, reply_markup=markup)
+        elif call.data == "all_notes":
+            bot.edit_message_text(get_all_notes(message.chat.id), message.chat.id, ms.message_id)
+
+        # if call.data == "create_new_note":
+        #     bot.send_message(user, "Enter note, what you want to save")
+        #     if create_new_note(user, call.data):
+        #         bot.send_message(user, "All has been saved")
+
+        if call.data == "/want_permissions":
+            users = get_users_to_permissions()
+            if users is not None:
+                bot.send_message(message.chat.id, "___This users want permissions____", reply_markup=users_markup(users))
+            else:
+                bot.send_message(message.chat.id, "No users what want to have permission", reply_markup=main_markup())
+        elif str(call.data).isdigit():
+            changed = edit_user_settings(message.chat.id, int(call.data))
+            bot.send_message(message.chat.id, changed, reply_markup=main_markup())
 
 
 
