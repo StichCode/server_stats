@@ -75,7 +75,7 @@ def start_message(message):
                                       reply_markup=users_mk(users))
             else:
                 bot.edit_message_text("No users what want to have permission", message.chat.id, ms.message_id,
-                                      reply_markup=users_mk())
+                                      reply_markup=users_mk(users))
         # elif str(call.data).isdigit():
         #     changed = edit_user_settings(message.chat.id, int(call.data))
         #     bot.send_message(message.chat.id, changed, reply_markup=main_markup())
