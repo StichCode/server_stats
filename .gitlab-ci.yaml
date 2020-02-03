@@ -15,8 +15,8 @@ stages:
 deploy:
   stage: deploy
   script:
-    - SERVER_PASS, SERVER_USER, SERVER_ADDR
     - sshpass -e ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_ADDR "sudo systemctl stop tg_bot.service"
     - sshpass -e ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_ADDR rm -rf $SERVER_DIR/venv
     - sshpass -e ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_ADDR "python3.8 venv $SERVER_DIR/venv && source $SERVER_DIR/venv/bin/activate && pip install -r $SERVER_DIR/requirments.txt"
     - sshpass -e ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_ADDR "sudo systemctl start tg_bot.service"
+  when: manual
