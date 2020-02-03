@@ -49,9 +49,7 @@ def start_message(message):
     @bot.callback_query_handler(func=lambda call: True)
     def callback(call):
         markup = main_markup()
-        if call.data == "/start" or "/back":
-            start_message(call)
-        elif call.data == "/ram":
+        if call.data == "/ram":
             bot.send_message(user, prepare_data(), reply_markup=markup)
         elif call.data == "/memory":
             bot.send_message(user, memory_usage(), reply_markup=markup)
