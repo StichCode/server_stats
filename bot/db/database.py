@@ -9,6 +9,9 @@ def create_db():
 
     cursor.execute("CREATE TABLE IF NOT EXISTS users (id INT PRIMARY KEY, username TEXT, "
                    "sign_in BOOLEAN, admin BOOLEAN)")
+    cursor.execute("CREATE TABLE IF NOT EXISTS notes (id INT AUTOINCREMENT PRIMARY KEY, "
+                   "id_user INT, note TEXT, FOREIGN KEY(id_user) REFERENCES users(id));")
+    # потом можно сделать категории и название заметок
     create_new_user(295290188, 'rabbit_666', True, True)
     conn.commit()
     conn.close()
@@ -26,10 +29,31 @@ def get_all_data():
     """ Fetch all data from database"""
     conn = __connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM users")
+    cursor.execute("SELECT * FROM users;")
     users = cursor.fetchall()
     conn.close()
     return users
+
+
+def create_new_note(id_user, note):
+    conn = __connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute("INSERT INTO notes (id_user, note) VALUES (?,?);", (id_user, note))
+    except sqlite3.IntegrityError:
+        return False
+    conn.commit()
+    conn.close()
+    return True
+
+
+def get_all_notes(id_user):
+    conn = __connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM notes WHERE id_user={}".format(id_user))
+    info = cursor.fetchall()
+    conn.close()
+    return info
 
 
 def create_new_user(id_user, username, has_permission=False, admin=False):

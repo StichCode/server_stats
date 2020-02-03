@@ -4,9 +4,9 @@ import telebot
 from telebot import apihelper
 
 from bot.db.database import create_db, has_user_permission, create_new_user, get_users_to_permissions, get_admin, \
-    edit_user_settings
+    edit_user_settings, get_all_notes, create_new_note
 from bot.get_info import memory_usage, prepare_data, get_cpy_percent
-from bot.markups import main_markup, users_markup
+from bot.markups import main_markup, users_markup, start_markup, notes_markup
 from config import Config
 
 
@@ -38,7 +38,7 @@ def like_id(s):
 def start_message(message):
     user = message.chat.id
     if has_user_permission(message.chat.id):
-        markup = main_markup()
+        markup = start_markup()
         bot.send_message(message.chat.id, welcome_message, reply_markup=markup)
     else:
         bot.send_message(message.chat.id, "You don't have permission to use bot")
@@ -49,16 +49,25 @@ def start_message(message):
     @bot.callback_query_handler(func=lambda call: True)
     def callback(call):
         markup = main_markup()
-        if call.data == "/start":
+        if call.data == "/start" or "/back":
             start_message()
         elif call.data == "/ram":
             bot.send_message(user, prepare_data(), reply_markup=markup)
         elif call.data == "/memory":
             bot.send_message(user, memory_usage(), reply_markup=markup)
         elif call.data == "/cpu":
-            cpu = get_cpy_percent()
             bot.send_message(user, "Now we will prepare information output for you.\nPlease wait.\nThanks.")
+            cpu = get_cpy_percent()
             bot.send_message(user, cpu, reply_markup=markup)
+        elif call.data == "/notes":
+            bot.send_message(user, "What you want to do?", reply_markup=notes_markup())
+        elif call.data == "all_notes":
+            info = get_all_notes(user)
+            bot.send_message(user, info)
+        elif call.data == "create_new_note":
+            bot.send_message(user, "Enter note, what you want to save")
+            if create_new_note(user, call.data):
+                bot.send_message(user, "All has been saved")
         elif call.data == "/want_permissions":
             users = get_users_to_permissions()
             if users is not None:

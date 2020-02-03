@@ -28,7 +28,7 @@ def __get_ram():
 
 def get_cpy_percent(interval=0.1):
     """ (-__-) """
-    processes = sorted(__get_ram(), key=itemgetter("ram"), reverse=True)[:5]
+    processes = sorted(__get_ram(), key=itemgetter("ram"), reverse=True)[:3]
     text_cpu = "_________CPU_________"
     for proc in processes:
         text_cpu += "\n"
@@ -54,7 +54,7 @@ def memory_usage():
 
 def prepare_data():
     text_ram = "____________RAM____________"
-    for line in sorted(__get_ram(), key=itemgetter("ram"), reverse=True)[:5]:
+    for line in sorted(__get_ram(), key=itemgetter("ram"), reverse=True)[:3]:
         text_ram += "\n"
         text_ram += f"Pid        : {line['pid']}\n"
         text_ram += f"Ram        : {round(line['ram'], 2)}%\n"
