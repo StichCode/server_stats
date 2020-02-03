@@ -1,16 +1,24 @@
 stages:
   - deploy
+  - test
 
 
 deploy:
   stage: deploy
-  script:
+  before_script:
     - sudo systemctl stop tg_bot.service
+  script:
     - rm -rf $SERVER_DIR/venv
-    - python3.8 -m venv $SERVER_DIR/venv
-    - source $SERVER_DIR/venv/bin/activate
-    - pip install -r $SERVER_DIR/requirments.txt
+    - rsync -a --info=progress2 --delete . $SERVER_DIR/
+    - python3.8 -m venv $SERVER_DIR/venv && source $SERVER_DIR/venv/bin/activate && pip install -r $SERVER_DIR/requirments.txt
+  after_script:
     - sudo systemctl start tg_bot.service
-  when: manual
+  tags:
+    - ya-runner
+
+test:
+  stage: test
+  script:
+    - systemctl is-active --quiet tg_bot.service
   tags:
     - ya-runner
