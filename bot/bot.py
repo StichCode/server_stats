@@ -6,7 +6,7 @@ from telebot import apihelper
 from bot.db.database import create_db, has_user_permission, create_new_user, get_users_to_permissions, get_admin, \
     edit_user_settings, get_all_notes, create_new_note
 from bot.get_info import memory_usage, prepare_data, get_cpy_percent
-from bot.markups import main_markup, users_markup, start_markup, notes_markup, starting_mk, remove
+from bot.markups import main_markup, users_markup, start_markup, notes_markup
 from config import Config
 
 
