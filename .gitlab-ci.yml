@@ -7,7 +7,7 @@ deploy:
   script:
     - sudo systemctl stop tg_bot.service
     - rm -rf $SERVER_DIR/venv
-    - python3.8 venv $SERVER_DIR/venv
+    - python3.8 -m venv $SERVER_DIR/venv
     - source $SERVER_DIR/venv/bin/activate
     - pip install -r $SERVER_DIR/requirments.txt
     - sudo systemctl start tg_bot.service
