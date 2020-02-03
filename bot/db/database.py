@@ -16,9 +16,10 @@ def create_db():
 
 def __connection():
     """ Connection to database """
-    if not os.path.exists("/home/parker/database_status.db"):
-        open('/home/parker/database_status.db', 'w').close()
-    return sqlite3.connect("database_status.db", check_same_thread=True)
+    path_to_database = "/home/parker/database_status.db"
+    if not os.path.exists(path_to_database):
+        open(path_to_database, 'w').close()
+    return sqlite3.connect(path_to_database, check_same_thread=True)
 
 
 def get_all_data():
