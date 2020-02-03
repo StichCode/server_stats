@@ -41,40 +41,28 @@ def start_message(message):
         bot.send_message(get_admin()[0], f"This user tried to request information\n"
                                          f" {message.from_user.username}({message.from_user.id})")
 
+    @bot.callback_query_handler(func=lambda call: True)
+    def ram(call):
+        if call.data == "/memory":
+            bot.send_message(message.chat.id, memory_usage())
 
-@bot.message_handler(func=lambda message: has_user_permission(message.chat.id))
-def ram(message):
-    if message.text == "Memory":
-        bot.send_message(message.chat.id, memory_usage())
-        # bot.send_message(message.chat.id, reply_markup=)
+        if call.data == "/ram":
+            bot.send_message(message.chat.id, prepare_data())
+#
+        if call.data == "/memory":
+            bot.send_message(message.chat.id, memory_usage())
 
-# @bot.callback_query_handler(func=lambda call: True)
-# def callback(call):
-#     if call.data == "/ram":
-#         bot.send_message(user, prepare_data(), reply_markup=main_markup())
-#
-# @bot.callback_query_handler(func=lambda call: True)
-# def callback(call):
-#     if call.data == "/memory":
-#         bot.send_message(user, memory_usage(), reply_markup=main_markup())
-#
-# @bot.callback_query_handler(func=lambda call: True)
-# def callback(call):
-#     if call.data == "/cpu":
-#         bot.send_message(user, "Now we will prepare information output for you.\nPlease wait.\nThanks.")
-#         cpu = get_cpy_percent()
-#         bot.send_message(user, cpu, reply_markup=main_markup())
-#
-# @bot.callback_query_handler(func=lambda call: True)
-# def callback(call):
-#     if call.data == "/notes":
-#         bot.send_message(user, "What you want to do?", reply_markup=notes_markup())
-#
-# @bot.callback_query_handler(func=lambda call: True)
-# def callback(call):
-#     if call.data == "all_notes":
-#         info = get_all_notes(user)
-#         bot.send_message(user, info)
+        if call.data == "/cpu":
+            bot.send_message(message.chat.id, "Now we will prepare information output for you.\nPlease wait.\nThanks.")
+            cpu = get_cpy_percent()
+            bot.send_message(message.chat.id, cpu)
+
+        if call.data == "/notes":
+            bot.send_message(message.chat.id, "What you want to do?")
+
+        if call.data == "all_notes":
+            info = get_all_notes(message.chat.id)
+            bot.send_message(message.chat.id, info)
 #
 # @bot.callback_query_handler(func=lambda call: True)
 # def callback(call):
