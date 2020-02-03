@@ -9,7 +9,7 @@ deploy:
     - sudo systemctl stop tg_bot.service
   script:
     - pwd
-    - rsync -a --info=progress2 --delete . $SERVER_DIR/
+    - sudo rsync -a --info=progress2 --delete . $SERVER_DIR/
     - rm -rf $SERVER_DIR/venv
     - python3.8 -m venv $SERVER_DIR/venv && source $SERVER_DIR/venv/bin/activate && pip install -r $SERVER_DIR/requirments.txt
   after_script:
