@@ -1,6 +1,6 @@
 from telebot import types
 
-BACK = types.InlineKeyboardButton('Back', callback_data="/back")
+BACK = types.InlineKeyboardButton('Back', callback_data="/start")
 
 
 def __default():

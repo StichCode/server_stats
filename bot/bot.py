@@ -48,25 +48,47 @@ def start_message(message):
 
     @bot.callback_query_handler(func=lambda call: True)
     def callback(call):
-        markup = main_markup()
+        if call.data == "/start":
+            pass
+
+    @bot.callback_query_handler(func=lambda call: True)
+    def callback(call):
         if call.data == "/ram":
-            bot.send_message(user, prepare_data(), reply_markup=markup)
-        elif call.data == "/memory":
-            bot.send_message(user, memory_usage(), reply_markup=markup)
-        elif call.data == "/cpu":
+            bot.send_message(user, prepare_data(), reply_markup=main_markup())
+
+    @bot.callback_query_handler(func=lambda call: True)
+    def callback(call):
+        if call.data == "/memory":
+            bot.send_message(user, memory_usage(), reply_markup=main_markup())
+
+    @bot.callback_query_handler(func=lambda call: True)
+    def callback(call):
+        if call.data == "/cpu":
             bot.send_message(user, "Now we will prepare information output for you.\nPlease wait.\nThanks.")
             cpu = get_cpy_percent()
-            bot.send_message(user, cpu, reply_markup=markup)
-        elif call.data == "/notes":
+            bot.send_message(user, cpu, reply_markup=main_markup())
+
+    @bot.callback_query_handler(func=lambda call: True)
+    def callback(call):
+        if call.data == "/notes":
             bot.send_message(user, "What you want to do?", reply_markup=notes_markup())
-        elif call.data == "all_notes":
+
+    @bot.callback_query_handler(func=lambda call: True)
+    def callback(call):
+        if call.data == "all_notes":
             info = get_all_notes(user)
             bot.send_message(user, info)
-        elif call.data == "create_new_note":
+
+    @bot.callback_query_handler(func=lambda call: True)
+    def callback(call):
+        if call.data == "create_new_note":
             bot.send_message(user, "Enter note, what you want to save")
             if create_new_note(user, call.data):
                 bot.send_message(user, "All has been saved")
-        elif call.data == "/want_permissions":
+
+    @bot.callback_query_handler(func=lambda call: True)
+    def callback(call):
+        if call.data == "/want_permissions":
             users = get_users_to_permissions()
             if users is not None:
                 bot.send_message(user, "___This users want permissions____", reply_markup=users_markup(users))
@@ -77,7 +99,11 @@ def start_message(message):
             bot.send_message(user, changed, reply_markup=markup)
 
 
+
+
+
 def start():
+    bot.send_message(get_admin()[0], "I'm alive, he-he")
     while True:
         try:
             bot.polling(none_stop=True, interval=0.5, timeout=0)
