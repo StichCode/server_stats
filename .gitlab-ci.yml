@@ -16,3 +16,5 @@ deploy:
     - python3.8 venv $SERVER_DIR/venv && source $SERVER_DIR/venv/bin/activate && pip install -r $SERVER_DIR/requirments.txt
     - sudo systemctl start tg_bot.service
   when: manual
+  tags:
+    - ya-runner
