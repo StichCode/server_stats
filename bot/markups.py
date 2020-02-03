@@ -3,6 +3,21 @@ from telebot import types
 BACK = types.InlineKeyboardButton('Back', callback_data="/start")
 
 
+def starting_mk():
+    mk = types.ReplyKeyboardMarkup()
+    btn_ram = types.KeyboardButton("RAM")
+    btn_cpu = types.KeyboardButton("CPU")
+    btn_memory = types.KeyboardButton("Memory")
+    btn_permission = types.KeyboardButton("Admin")
+    btn_note = types.KeyboardButton("Notes")
+    mk.row(btn_cpu, btn_ram, btn_memory)
+    mk.row(btn_permission, btn_note)
+    return mk
+
+
+def remove():
+    return types.ReplyKeyboardRemove()
+
 def __default():
     markup = types.InlineKeyboardMarkup()
     button_ram = types.InlineKeyboardButton('RAM', callback_data="/ram")
