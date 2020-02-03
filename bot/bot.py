@@ -6,7 +6,7 @@ from telebot import apihelper
 from bot.db.database import create_db, has_user_permission, create_new_user, get_users_to_permissions, get_admin, \
     edit_user_settings, get_all_notes, create_new_note
 from bot.get_info import memory_usage, prepare_data, get_cpy_percent
-from bot.markups import main_markup, users_markup, start_markup, notes_markup
+from bot.markups import start_mk, users_mk, notes_mk, settings_mk
 from config import Config
 
 
@@ -34,7 +34,7 @@ def like_id(s):
 @bot.message_handler(commands=['start', 'help'])
 def start_message(message):
     if has_user_permission(message.chat.id):
-        ms = bot.send_message(message.chat.id, welcome_message, reply_markup=main_markup())
+        ms = bot.send_message(message.chat.id, welcome_message, reply_markup=start_mk())
     else:
         bot.send_message(message.chat.id, "You don't have permission to use bot")
         create_new_user(message.from_user.id, message.from_user.username)
@@ -44,37 +44,41 @@ def start_message(message):
     @bot.callback_query_handler(func=lambda call: True)
     def ram(call):
         if call.data == "/memory":
-            bot.edit_message_text(memory_usage(), message.chat.id, ms.message_id, reply_markup=main_markup())
+            bot.edit_message_text(memory_usage(), message.chat.id, ms.message_id, reply_markup=start_mk())
 
         elif call.data == "/ram":
-            bot.edit_message_text(prepare_data(), message.chat.id, ms.message_id, reply_markup=main_markup())
+            bot.edit_message_text(prepare_data(), message.chat.id, ms.message_id, reply_markup=start_mk())
 
         elif call.data == "/cpu":
-            bot.edit_message_text(get_cpy_percent(), message.chat.id, ms.message_id, reply_markup=main_markup())
+            bot.edit_message_text(get_cpy_percent(), message.chat.id, ms.message_id, reply_markup=start_mk())
 
         elif call.data == "/notes":
-            bot.edit_message_text("What you want to do?", message.chat.id, ms.message_id, reply_markup=notes_markup())
+            bot.edit_message_text("What you want to do?", message.chat.id, ms.message_id, reply_markup=notes_mk())
 
-        elif call.data == "all_notes":
+        elif call.data == "/all_notes":
             bot.edit_message_text(get_all_notes(message.chat.id), message.chat.id, ms.message_id)
 
-        # if call.data == "create_new_note":
-        #     bot.send_message(user, "Enter note, what you want to save")
-        #     if create_new_note(user, call.data):
-        #         bot.send_message(user, "All has been saved")
+        elif call.data == "/back":
+            bot.edit_message_text(welcome_message, message.chat.id, ms.message_id, reply_markup=start_mk())
 
-        if call.data == "/want_permissions":
+        elif call.data == "/create_new_note":
+            bot.edit_message_text("Not work.", message.chat.id, ms.message_id, reply_markup=start_mk())
+
+            # bot.send_message(user, "Enter note, what you want to save")
+            # if create_new_note(user, call.data):
+            #     bot.send_message(user, "All has been saved")
+
+        if call.data == "/settings":
             users = get_users_to_permissions()
             if users is not None:
-                bot.send_message(message.chat.id, "___This users want permissions____", reply_markup=users_markup(users))
+                bot.edit_message_text("___This users want permissions____", message.chat.id, ms.message_id,
+                                      reply_markup=users_mk(users))
             else:
-                bot.send_message(message.chat.id, "No users what want to have permission", reply_markup=main_markup())
-        elif str(call.data).isdigit():
-            changed = edit_user_settings(message.chat.id, int(call.data))
-            bot.send_message(message.chat.id, changed, reply_markup=main_markup())
-
-
-
+                bot.edit_message_text("No users what want to have permission", message.chat.id, ms.message_id,
+                                      reply_markup=users_mk())
+        # elif str(call.data).isdigit():
+        #     changed = edit_user_settings(message.chat.id, int(call.data))
+        #     bot.send_message(message.chat.id, changed, reply_markup=main_markup())
 
 
 def start():
