@@ -1,10 +1,6 @@
 default:
-  image: ubuntu
   before_script:
     - apt-get update -qq
-    - apt-get install -y -qq sshpass rsync
-    - export SSHPASS=$SERVER_PASS
-    - export ENV
 
 
 
@@ -15,8 +11,8 @@ stages:
 deploy:
   stage: deploy
   script:
-    - sshpass -e ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_ADDR "sudo systemctl stop tg_bot.service"
-    - sshpass -e ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_ADDR rm -rf $SERVER_DIR/venv
-    - sshpass -e ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_ADDR "python3.8 venv $SERVER_DIR/venv && source $SERVER_DIR/venv/bin/activate && pip install -r $SERVER_DIR/requirments.txt"
-    - sshpass -e ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_ADDR "sudo systemctl start tg_bot.service"
+    - sudo systemctl stop tg_bot.service
+    - rm -rf $SERVER_DIR/venv
+    - python3.8 venv $SERVER_DIR/venv && source $SERVER_DIR/venv/bin/activate && pip install -r $SERVER_DIR/requirments.txt
+    - sudo systemctl start tg_bot.service
   when: manual
