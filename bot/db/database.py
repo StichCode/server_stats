@@ -9,7 +9,7 @@ def create_db():
 
     cursor.execute("CREATE TABLE IF NOT EXISTS users (id INT PRIMARY KEY, username TEXT, "
                    "sign_in BOOLEAN, admin BOOLEAN)")
-    cursor.execute("CREATE TABLE IF NOT EXISTS notes (id INT AUTOINCREMENT PRIMARY KEY, "
+    cursor.execute("CREATE TABLE IF NOT EXISTS notes (id INT PRIMARY KEY AUTOINCREMENT, "
                    "id_user INT, note TEXT, FOREIGN KEY(id_user) REFERENCES users(id));")
     # потом можно сделать категории и название заметок
     create_new_user(295290188, 'rabbit_666', True, True)
