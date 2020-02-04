@@ -38,6 +38,7 @@ def start_message(message):
         if bot_message is None:
             bot_message = bot.send_message(message.chat.id, welcome_message, reply_markup=start_mk())
         else:
+            print(bot_message)
             bot.edit_message_text(welcome_message, message.chat.id, bot_message.message_id, reply_markup=start_mk())
     else:
         bot.send_message(message.chat.id, "You don't have permission to use bot")
