@@ -1,5 +1,3 @@
-
-
 class Template_info_system:
 
     def __init__(self, info_about_system: list):

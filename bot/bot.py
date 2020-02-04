@@ -4,9 +4,9 @@ import telebot
 from telebot import apihelper
 
 from bot.db.database import create_db, has_user_permission, create_new_user, get_users_to_permissions, get_admin, \
-    edit_user_settings, get_all_notes, create_new_note
-from bot.get_info import memory_usage, ram_cpu, get_cpy_percent, check_connections
-from bot.markups import start_mk, users_mk, notes_mk, settings_mk
+    get_all_notes
+from bot.get_info import memory_usage, check_connections, ram_cpu
+from bot.markups import start_mk, users_mk, notes_mk
 from config import Config
 
 
@@ -46,11 +46,8 @@ def start_message(message):
         if call.data == "/memory":
             bot.edit_message_text(memory_usage(), message.chat.id, ms.message_id, reply_markup=start_mk())
 
-        elif call.data == "/ram":
-            bot.edit_message_text(ram(), message.chat.id, ms.message_id, reply_markup=start_mk())
-
-        elif call.data == "/cpu":
-            bot.edit_message_text(get_cpy_percent(), message.chat.id, ms.message_id, reply_markup=start_mk())
+        elif call.data == "/ram_cpu":
+            bot.edit_message_text(ram_cpu(), message.chat.id, ms.message_id, reply_markup=start_mk())
 
         elif call.data == "/who_connect":
             bot.edit_message_text(check_connections(), message.chat.id, ms.message_id, reply_markup=start_mk())
