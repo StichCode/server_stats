@@ -83,14 +83,12 @@ def start_message(message):
 
 
 def start():
+    create_db()
     bot.send_message(get_admin()[0], "I'm online, he-he")
     while True:
         try:
-            bot.polling(none_stop=True, interval=0.5, timeout=0)
+            bot.polling(none_stop=True, interval=1, timeout=0)
         except Exception:
+            bot.send_message(get_admin()[0], "I'm offline")
             time.sleep(10)
 
-
-if __name__ == '__main__':
-    create_db()
-    start()
