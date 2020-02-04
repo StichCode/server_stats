@@ -65,6 +65,8 @@ def start_message(message):
         elif call.data == "/create_new_note":
             bot.edit_message_text("Not work.", message.chat.id, ms.message_id, reply_markup=start_mk())
 
+        elif call.data == "/start":
+            ms = bot.send_message(message.chat.id, welcome_message, reply_markup=start_mk())
             # bot.send_message(user, "Enter note, what you want to save")
             # if create_new_note(user, call.data):
             #     bot.send_message(user, "All has been saved")
