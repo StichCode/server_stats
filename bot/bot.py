@@ -5,7 +5,7 @@ from telebot import apihelper
 
 from bot.db.database import create_db, has_user_permission, create_new_user, get_users_to_permissions, get_admin, \
     edit_user_settings, get_all_notes, create_new_note
-from bot.get_info import memory_usage, prepare_data, get_cpy_percent
+from bot.get_info import memory_usage, ram_cpu, get_cpy_percent, check_connections
 from bot.markups import start_mk, users_mk, notes_mk, settings_mk
 from config import Config
 
@@ -47,10 +47,13 @@ def start_message(message):
             bot.edit_message_text(memory_usage(), message.chat.id, ms.message_id, reply_markup=start_mk())
 
         elif call.data == "/ram":
-            bot.edit_message_text(prepare_data(), message.chat.id, ms.message_id, reply_markup=start_mk())
+            bot.edit_message_text(ram(), message.chat.id, ms.message_id, reply_markup=start_mk())
 
         elif call.data == "/cpu":
             bot.edit_message_text(get_cpy_percent(), message.chat.id, ms.message_id, reply_markup=start_mk())
+
+        elif call.data == "/who_connect":
+            bot.edit_message_text(check_connections(), message.chat.id, ms.message_id, reply_markup=start_mk())
 
         elif call.data == "/notes":
             bot.edit_message_text("What you want to do?", message.chat.id, ms.message_id, reply_markup=notes_mk())
@@ -75,7 +78,7 @@ def start_message(message):
                                       reply_markup=users_mk(users))
             else:
                 bot.edit_message_text("No users what want to have permission", message.chat.id, ms.message_id,
-                                      reply_markup=users_mk(users))
+                                      reply_markup=start_mk())
         # elif str(call.data).isdigit():
         #     changed = edit_user_settings(message.chat.id, int(call.data))
         #     bot.send_message(message.chat.id, changed, reply_markup=main_markup())

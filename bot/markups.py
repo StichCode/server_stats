@@ -21,7 +21,7 @@ def settings_mk():
     btn_show_users = types.InlineKeyboardButton('Show new users', '/show')
     # В будущем добавить больше настроек
     mk.row(btn_show_users)
-    return
+    return mk
 
 
 def notes_mk():
