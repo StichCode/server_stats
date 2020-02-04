@@ -2,8 +2,8 @@ import os
 
 
 class Config(object):
-    TOKEN = os.environ.get("TOKEN")
-    USERNAME_SOCKS = os.environ.get("USERNAME_SOCKS")
-    PASSWORD_SOCKS = os.environ.get("PASSWORD_SOCKS")
-    ADDRESS_SOCKS = os.environ.get("ADDRESS_SOCKS")
-    PORT_SOCKS = os.environ.get("PORT_SOCKS")
+    TOKEN = os.environ.setdefault("TOKEN", None)
+    USERNAME_SOCKS = os.environ.setdefault("USERNAME_SOCKS", None)
+    PASSWORD_SOCKS = os.environ.setdefault("PASSWORD_SOCKS", None)
+    ADDRESS_SOCKS = os.environ.setdefault("ADDRESS_SOCKS", None)
+    PORT_SOCKS = os.environ.setdefault("PORT_SOCKS", None)
