@@ -31,8 +31,9 @@ def like_id(s):
 # user = 0
 
 
-@bot.message_handler(commands=['start', 'help'])
+@bot.message_handler(commands=['start'])
 def start_message(message):
+    ms = None
     if has_user_permission(message.chat.id):
         ms = bot.send_message(message.chat.id, welcome_message, reply_markup=start_mk())
     else:
@@ -90,5 +91,6 @@ def start():
             time.sleep(10)
 
 
-create_db()
-start()
+if __name__ == '__main__':
+    create_db()
+    start()
