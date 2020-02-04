@@ -19,6 +19,7 @@ deploy:
 test:
   stage: test
   script:
+    - systemctl status tg_bot.service
     - systemctl is-active --quiet tg_bot.service
   tags:
     - ya-runner
