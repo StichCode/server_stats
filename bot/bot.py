@@ -33,71 +33,65 @@ def like_id(s):
 
 @bot.message_handler(commands=['start'])
 def start_message(message):
-    bot.send_message(message.chat.id, welcome_message)
+    bot_message = None
+    if has_user_permission(message.chat.id):
+        if bot_message is None:
+            bot_message = bot.send_message(message.chat.id, welcome_message, reply_markup=start_mk())
+        else:
+            print("BOT MESSAGE", bot_message)
+            bot.edit_message_text(welcome_message, message.chat.id, bot_message.message_id, reply_markup=start_mk())
+    else:
+        bot.send_message(message.chat.id, "You don't have permission to use bot")
+        create_new_user(message.from_user.id, message.from_user.username)
+        bot.send_message(get_admin()[0], f"This user tried to request information\n"
+                                         f" {message.from_user.username}({message.from_user.id})")
 
+    @bot.callback_query_handler(func=lambda call: True)
+    def ram(call):
+        if call.data == "/memory":
+            bot.edit_message_text(memory_usage(), message.chat.id, bot_message.message_id, reply_markup=start_mk())
 
-# def pizda():
-#     message = None
-#     bot_message = None
-#     if has_user_permission(message.chat.id):
-#         if bot_message is None:
-#             bot.send_message(message.chat.id, welcome_message, reply_markup=start_mk())
-#         else:
-#             print("BOT MESSAGE", bot_message)
-#             bot.edit_message_text(welcome_message, message.chat.id, bot_message.message_id, reply_markup=start_mk())
-#     else:
-#         bot.send_message(message.chat.id, "You don't have permission to use bot")
-#         create_new_user(message.from_user.id, message.from_user.username)
-#         bot.send_message(get_admin()[0], f"This user tried to request information\n"
-#                                          f" {message.from_user.username}({message.from_user.id})")
-#
-#     @bot.callback_query_handler(func=lambda call: True)
-#     def ram(call):
-#         if call.data == "/memory":
-#             bot.edit_message_text(memory_usage(), message.chat.id, bot_message.message_id, reply_markup=start_mk())
-#
-#         elif call.data == "/ram_cpu":
-#             bot.edit_message_text(ram_cpu(), message.chat.id, bot_message.message_id, reply_markup=start_mk())
-#
-#         elif call.data == "/who_connect":
-#             bot.edit_message_text(check_connections(), message.chat.id, bot_message.message_id, reply_markup=start_mk())
-#
-#         elif call.data == "/notes":
-#             bot.edit_message_text("What you want to do?", message.chat.id, bot_message.message_id, reply_markup=notes_mk())
-#
-#         elif call.data == "/all_notes":
-#             bot.edit_message_text(get_all_notes(message.chat.id), message.chat.id, bot_message.message_id)
-#
-#         elif call.data == "/back":
-#             bot.edit_message_text(welcome_message, message.chat.id, bot_message.message_id, reply_markup=start_mk())
-#
-#         elif call.data == "/create_new_note":
-#             bot.edit_message_text("Not work.", message.chat.id, bot_message.message_id, reply_markup=start_mk())
-#
-#             # bot.send_message(user, "Enter note, what you want to save")
-#             # if create_new_note(user, call.data):
-#             #     bot.send_message(user, "All has been saved")
-#
-#         if call.data == "/settings":
-#             users = get_users_to_permissions()
-#             if users is not None:
-#                 bot.edit_message_text("___This users want permissions____", message.chat.id, bot_message.message_id,
-#                                       reply_markup=users_mk(users))
-#             else:
-#                 bot.edit_message_text("No users what want to have permission", message.chat.id, bot_message.message_id,
-#                                       reply_markup=start_mk())
-#         # elif str(call.data).isdigit():
-#         #     changed = edit_user_settings(message.chat.id, int(call.data))
-#         #     bot.send_message(message.chat.id, changed, reply_markup=main_markup())
+        elif call.data == "/ram_cpu":
+            bot.edit_message_text(ram_cpu(), message.chat.id, bot_message.message_id, reply_markup=start_mk())
+
+        elif call.data == "/who_connect":
+            bot.edit_message_text(check_connections(), message.chat.id, bot_message.message_id, reply_markup=start_mk())
+
+        elif call.data == "/notes":
+            bot.edit_message_text("What you want to do?", message.chat.id, bot_message.message_id, reply_markup=notes_mk())
+
+        elif call.data == "/all_notes":
+            bot.edit_message_text(get_all_notes(message.chat.id), message.chat.id, bot_message.message_id)
+
+        elif call.data == "/back":
+            bot.edit_message_text(welcome_message, message.chat.id, bot_message.message_id, reply_markup=start_mk())
+
+        elif call.data == "/create_new_note":
+            bot.edit_message_text("Not work.", message.chat.id, bot_message.message_id, reply_markup=start_mk())
+
+            # bot.send_message(user, "Enter note, what you want to save")
+            # if create_new_note(user, call.data):
+            #     bot.send_message(user, "All has been saved")
+
+        if call.data == "/settings":
+            users = get_users_to_permissions()
+            if users is not None:
+                bot.edit_message_text("___This users want permissions____", message.chat.id, bot_message.message_id,
+                                      reply_markup=users_mk(users))
+            else:
+                bot.edit_message_text("No users what want to have permission", message.chat.id, bot_message.message_id,
+                                      reply_markup=start_mk())
+        # elif str(call.data).isdigit():
+        #     changed = edit_user_settings(message.chat.id, int(call.data))
+        #     bot.send_message(message.chat.id, changed, reply_markup=main_markup())
 
 
 def start():
-    # create_db()
+    create_db()
     # bot.send_message(get_admin()[0], "I'm online, he-he")
-
     while True:
         try:
-            bot.polling(none_stop=True, interval=0.2, timeout=0)
+            bot.polling(none_stop=True, interval=1, timeout=0)
         except Exception:
             time.sleep(10)
 
