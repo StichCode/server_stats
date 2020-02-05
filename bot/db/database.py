@@ -19,7 +19,7 @@ def create_db():
 
 def __connection():
     """ Connection to database """
-    path_to_database = "/home/parker/database_status.db"
+    path_to_database = "../database_status.db"
     if not os.path.exists(path_to_database):
         open(path_to_database, 'w').close()
     return sqlite3.connect(path_to_database, check_same_thread=True)
