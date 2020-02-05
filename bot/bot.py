@@ -1,3 +1,4 @@
+import copy
 import time
 
 import telebot
@@ -32,8 +33,8 @@ def like_id(s):
 
 @bot.message_handler(commands=['start'])
 def start_message(message):
-    bot_message = bot.send_message(message.chat.id, welcome_message, reply_markup=start_mk())
-    print(bot.send_message(message.chat.id, str(bot_message), reply_markup=start_mk()))
+    bot_message = copy.deepcopy(bot.send_message(message.chat.id, welcome_message, reply_markup=start_mk()))
+    bot.send_message(message.chat.id, str(bot_message), reply_markup=start_mk())
 
     @bot.callback_query_handler(func=lambda call: True)
     def ram(call):
