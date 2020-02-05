@@ -14,7 +14,6 @@ apihelper.proxy = {'https': f'socks5://{Config.USERNAME_SOCKS}:{Config.PASSWORD_
                             f'@{Config.ADDRESS_SOCKS}:{Config.PORT_SOCKS}'}
 
 bot = telebot.TeleBot(Config.TOKEN)
-
 # / memory -> dict / ram -> dict / cpy -> get_pid -> dict
 emoji_snow = u"\u2744"
 
@@ -33,18 +32,7 @@ def like_id(s):
 
 @bot.message_handler(commands=['start'])
 def start_message(message):
-    bot_message = None
-    if has_user_permission(message.chat.id):
-        if bot_message is None:
-            bot_message = bot.send_message(message.chat.id, welcome_message, reply_markup=start_mk())
-        else:
-            print("BOT MESSAGE", bot_message)
-            bot.edit_message_text(welcome_message, message.chat.id, bot_message.message_id, reply_markup=start_mk())
-    else:
-        bot.send_message(message.chat.id, "You don't have permission to use bot")
-        create_new_user(message.from_user.id, message.from_user.username)
-        bot.send_message(get_admin()[0], f"This user tried to request information\n"
-                                         f" {message.from_user.username}({message.from_user.id})")
+    bot_message = bot.send_message(message.chat.id, welcome_message, reply_markup=start_mk())
 
     @bot.callback_query_handler(func=lambda call: True)
     def ram(call):
