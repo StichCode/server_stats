@@ -11,8 +11,7 @@ deploy:
     - rsync -a --info=progress2 --delete . $LOCAL_DIR/app
     - rm -rf $LOCAL_DIR/venv
     - python3.8 -m venv $LOCAL_DIR/venv && source $LOCAL_DIR/venv/bin/activate && pip install -r $LOCAL_DIR/app/requirments.txt
-  after_script:
-    - sudo systemctl start tg_bot.service
+    - sudo systemctl start home_bot.service
   tags:
     - home-bot
 
