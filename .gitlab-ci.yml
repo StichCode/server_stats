@@ -8,17 +8,17 @@ deploy:
   before_script:
     - sudo systemctl stop tg_bot.service
   script:
-    - rsync -a --info=progress2 --delete . $SERVER_DIR/app
-    - rm -rf $SERVER_DIR/venv
-    - python3.8 -m venv $SERVER_DIR/venv && source $SERVER_DIR/venv/bin/activate && pip install -r $SERVER_DIR/app/requirments.txt
+    - rsync -a --info=progress2 --delete . $LOCAL_DIR/app
+    - rm -rf $LOCAL_DIR/venv
+    - python3.8 -m venv $LOCAL_DIR/venv && source $LOCAL_DIR/venv/bin/activate && pip install -r $LOCAL_DIR/app/requirments.txt
   after_script:
     - sudo systemctl start tg_bot.service
   tags:
-    - ya-runner
+    - home-bot
 
 test:
   stage: test
   script:
     - systemctl status tg_bot.service
   tags:
-    - ya-runner
+    - home-bot
