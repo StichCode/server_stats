@@ -6,7 +6,7 @@ stages:
 deploy:
   stage: deploy
   before_script:
-    - sudo systemctl stop tg_bot.service
+    - sudo systemctl stop home_bot.service
   script:
     - rsync -a --info=progress2 --delete . $LOCAL_DIR/app
     - rm -rf $LOCAL_DIR/venv
@@ -19,6 +19,6 @@ deploy:
 test:
   stage: test
   script:
-    - systemctl status tg_bot.service
+    - systemctl status home_bot.service
   tags:
     - home-bot
