@@ -1,23 +1,42 @@
 stages:
-  - deploy
-  - test
+  - build
+  - start
+  - stop
+  - prod
+
+
+build:
+  stage: build
+  script:
+    - docker build -t stats_bot:master-1 .
+  tags:
+    - bot
+  only:
+    - merge_requests
 
 
 deploy:
-  stage: deploy
-  before_script:
-    - sudo systemctl stop home_bot.service
+  stage: start
   script:
-    - rsync -a --info=progress2 --delete . $LOCAL_DIR/app
-    - rm -rf $LOCAL_DIR/venv
-    - python3.8 -m venv $LOCAL_DIR/venv && source $LOCAL_DIR/venv/bin/activate && pip install -r $LOCAL_DIR/app/requirments.txt
-    - sudo systemctl start home_bot.service
+    - docker run -it stats_bot:master-1
   tags:
-    - home-bot
+    - bot
+  only:
+    - merge_requests
 
-test:
-  stage: test
+stop:
+  stage: stop
   script:
-    - systemctl status home_bot.service
+    - docker stop stats_bot:master-1
   tags:
-    - home-bot
+    - bot
+  when: manual
+  only:
+    - merge_requests
+
+prod:
+  stage: prod
+  script:
+    - docker build -t stats_bot:prod .
+    - docker start -it stats_bot:prod -d
+  when: manual

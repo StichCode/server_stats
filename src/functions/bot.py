@@ -1,19 +1,15 @@
-import copy
 import time
 
 import telebot
-from telebot import apihelper
+from loguru import logger
 
-from bot.get_info import memory_usage, check_connections, ram_cpu
-from bot.markups import start_mk
-from config import Config
+from src.functions.get_info import memory_usage, ram_cpu, check_connections
+from src.functions.markups import start_mk
+from config import config
 
-apihelper.proxy = {'https': f'socks5://{Config.USERNAME_SOCKS}:{Config.PASSWORD_SOCKS}'
-                            f'@{Config.ADDRESS_SOCKS}:{Config.PORT_SOCKS}'}
 
-bot = telebot.TeleBot(Config.TOKEN)
-# / memory -> dict / ram -> dict / cpy -> get_pid -> dict
-emoji_snow = u"\u2744"
+bot = telebot.TeleBot(token=config.token)
+
 
 welcome_message = "Hi, what you want to known?\n" \
                   "I can show you info about:\n"
@@ -22,24 +18,30 @@ welcome_message = "Hi, what you want to known?\n" \
 @bot.message_handler(commands=['start'])
 def start_message(message):
     bot.send_message(message.chat.id, welcome_message, reply_markup=start_mk())
-    if message.chat.id not in Config.ADMINISTRATORS:
-        bot.send_message(message.chat.id, "Fuck you!")
+    logger.info(f"User {message.chat.id}, start messaging")
 
     @bot.callback_query_handler(func=lambda call: True)
     def ram(call):
         if call.data == "/memory":
+            logger.info(f"User {message.chat.id}, requested information about memory usage")
             bot.send_message(message.chat.id, memory_usage(), reply_markup=start_mk())
             # bot.edit_message_text(memory_usage(), message.chat.id, bot_message.message_id, reply_markup=start_mk())
 
         elif call.data == "/ram_cpu":
+            logger.info(f"User {message.chat.id}, requested information about ram and cpu")
             bot.send_message(message.chat.id, ram_cpu(), reply_markup=start_mk())
             # bot.edit_message_text(ram_cpu(), message.chat.id, bot_message.message_id, reply_markup=start_mk())
 
         elif call.data == "/who_connect":
+            logger.info(f"User {message.chat.id}, requested information about connected people")
             bot.send_message(message.chat.id, check_connections(), reply_markup=start_mk())
 
+        elif call.data == "/temp":
+            logger.info(f"User {message.chat.id}, requested information about temp")
+            bot.send_message(message.chat.id, "Not available now", reply_markup=start_mk())
 
-def start():
+
+def start_bot():
     while True:
         try:
             bot.polling(none_stop=True, interval=1, timeout=0)
